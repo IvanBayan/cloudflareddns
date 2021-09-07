@@ -19,7 +19,13 @@ from .__about__ import __version__
 
 def get_public_ip():
     log.debug('Getting public IP from an external service')
-    return requests.get('https://ident.me').text
+    try:
+        return requests.get("https://ident.me").text
+    except:
+        res = requests.get("https://one.one.one.one/cdn-cgi/trace").text
+        for i in res.splitlines():
+            if i.startswith("ip="):
+                return i[3:]
 
 
 def cloudflare_creds_helper(email=None, key=None):
